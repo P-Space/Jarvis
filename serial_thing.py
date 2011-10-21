@@ -41,7 +41,6 @@ ser.setDTR(Off)
 lasttime = 0
 buttonPressed = False
 doortime = 0
-monopatis = '4C0020BAD600\r\n\x03'
 while True:
 	s = ser.read(16)
 	ser.flushInput()
