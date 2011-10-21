@@ -1,6 +1,9 @@
 import serial
 import string
 import time
+import _mysql
+
+import config
 
 On = False
 Off = True
@@ -38,6 +41,9 @@ def controlDoor():
 ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.5)
 print ser.portstr 
 ser.setDTR(Off)
+
+db=_mysql.connect(host="localhost", user=config.USER, passwd=config.PASSWD,db=config.DB)
+
 lasttime = 0
 buttonPressed = False
 doortime = 0
@@ -62,6 +68,7 @@ while True:
 					# print newtime
 					if newtime - lasttime > 2:
 						print "Button Pressed! Timestamp: "+time.strftime("%H:%M:%S")
+						db.query("""INSERT INTO events(type) VALUES('remote')""") 
 						buttonPressed = True
 						doortime = newtime
 						print "Door opened"
@@ -76,7 +83,9 @@ while True:
 		for line in open("cards.txt"):
 			if s[1:13] in line:
 				found = 1
-				print "Card belongs to: " + line.split("\t")[1].split("\n")[0]
+				username=line.split("\t")[1].split("\n")[0]
+				print "Card belongs to: " + username
+				db.query("""INSERT INTO events(type, name, card) VALUES('card', '"""+username+"""', '"""+s[1:13]+"""')""") 
 				break
 		if found == 1:
 			print "Accepted!"
@@ -95,4 +104,5 @@ while True:
 	ser.flushInput()
 	
 ser.close()   
+db.close()
 
