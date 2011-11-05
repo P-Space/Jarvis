@@ -1,0 +1,46 @@
+#events
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 13px;
+/*	margin: 10px;*/
+/*	width: 300px;*/
+	text-align: center;
+	border-collapse: collapse;
+	border-top: 7px solid #9baff1;
+	border-bottom: 7px solid #9baff1;
+}
+
+#events th
+{
+	font-size: 15px;
+	font-weight: normal;
+	padding: 8px;
+	background: #e8edff;
+	border-right: 1px solid #9baff1;
+	border-left: 1px solid #9baff1;
+	color: #039;
+}
+#events tr
+{
+	background: #e8edff; 
+	color: #669;
+}
+
+#events tr#card
+{
+	background: #e3ffe1; 
+	color: #548869;
+}
+
+#events tr#remote
+{
+	background: #fffee1; 
+	color: #71885f;
+}
+
+#events td
+{
+	padding: 8px;
+	border-right: 1px solid #aabcfe;
+	border-left: 1px solid #aabcfe;	
+}
