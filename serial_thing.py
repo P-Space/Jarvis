@@ -2,6 +2,7 @@ import serial
 import string
 import time
 import _mysql
+import _mysql_exceptions
 
 import config
 
@@ -42,15 +43,14 @@ ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.5)
 print ser.portstr 
 ser.setDTR(Off)
 
-db=_mysql.connect(host="localhost", user=config.USER, passwd=config.PASSWD,db=config.DB)
-
 lasttime = 0
 buttonPressed = False
 doortime = 0
+
 while True:
 	s = ser.read(16)
 	ser.flushInput()
-#	print ByteToHex(x)
+	#print ByteToHex(x)
 	checkIfReleased()
 	controlDoor()
 	if len(s) < 14:
@@ -68,7 +68,14 @@ while True:
 					# print newtime
 					if newtime - lasttime > 2:
 						print "Button Pressed! Timestamp: "+time.strftime("%H:%M:%S")
-						db.query("""INSERT INTO events(type) VALUES('remote')""") 
+						try:
+							db=_mysql.connect(host="localhost", user=config.USER, passwd=config.PASSWD,db=config.DB)
+							db.query("""INSERT INTO events(type) VALUES('remote')""") 
+							db.close()
+						except _mysql.Error:
+							print "Shit! DB Error!"
+						except NameError:
+							print "No DB was initialized"
 						buttonPressed = True
 						doortime = newtime
 						print "Door opened"
@@ -85,7 +92,14 @@ while True:
 				found = 1
 				username=line.split("\t")[1].split("\n")[0]
 				print "Card belongs to: " + username
-				db.query("""INSERT INTO events(type, name, card) VALUES('card', '"""+username+"""', '"""+s[1:13]+"""')""") 
+				try:
+					db=_mysql.connect(host="localhost", user=config.USER, passwd=config.PASSWD,db=config.DB)
+					db.query("""INSERT INTO events(type, name, card) VALUES('card', '"""+username+"""', '"""+s[1:13]+"""')""") 
+					db.close()
+				except _mysql.Error:
+					print "Shit! DB Error!"
+				except NameError:
+					print "No DB was initialized"
 				break
 		if found == 1:
 			print "Accepted!"
@@ -102,7 +116,5 @@ while True:
 	controlDoor()
 
 	ser.flushInput()
-	
-ser.close()   
-db.close()
+ser.close()	
 
