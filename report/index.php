@@ -57,7 +57,7 @@ else
 			echo "</tr>";
 		}
 		else
-			echo $table_row;			
+			echo strtotime($row[1])." ".$table_row;			
 	}
 	if($style)
 		echo "</table>";
