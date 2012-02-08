@@ -95,16 +95,23 @@ while True:
 		for line in open("cards.txt"):
 			#Check if the line contains the number of the card
 			if s[1:13] in line:
-				found = 1
-
-				#line format: card number \t username \n
+				#line format: cardnumber\tusername\n
 				username = line.split("\t")[1].split("\n")[0]
-				print "Card belongs to: " + username
 
 				#Check if the card has been cancelled
 				if re.match("#", line):
-					print "Card " + s[1:13] + "rejected for user " + username
+					print "Card " + s[1:13] + " rejected for user " + username
 					break
+				
+				#If the card has been found in the file and is valid, open the door
+				found = 1
+				print "Card belongs to: " + username
+				print "Accepted!"
+				newtime = time.time()
+				doortime = newtime
+				print "Door opened"
+				ser.setDTR(On)
+				
 				try:
 					db=_mysql.connect(host="localhost", user=config.USER, passwd=config.PASSWD,db=config.DB)
 					db.query("""INSERT INTO events(type, name, card) VALUES('card', '"""+username+"""', '"""+s[1:13]+"""')""") 
@@ -113,15 +120,10 @@ while True:
 					print "Shit! DB Error!"
 				except NameError:
 					print "No DB was initialized"
-				break
-		if found == 1:
-			print "Accepted!"
-			newtime = time.time()
-			doortime = newtime
-			print "Door opened"
-			ser.setDTR(On)
-		else:
+				
+		if found == 0:
 			print "Unknown Card Number: " + s[1:13]
+	
 	elif done == 0:
 		print "Got undefined data: " + s + " Hex: " + ByteToHex(s)
 		
