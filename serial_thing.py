@@ -25,16 +25,20 @@ def ByteToHex( byteStr ):
 
     return ''.join( [ "%02X " % ord( x ) for x in byteStr ] ).strip()
 
+#If the button has been pressed more than 1 second ago, reset its status to "false".
 def checkIfReleased():
 	global buttonPressed
 	if time.time() - lasttime > 1 and buttonPressed is True:
 		print "Button Released!"
 		buttonPressed = False
-		
+
+#controlDoor(): Releases the door if more than "delay" seconds have passed 
+#since the door was last energized ("doortime"). 
 def controlDoor():
 	global doortime
+	delay = 0.5
 	if doortime != 0:
-		if time.time() - doortime > 2:
+		if time.time() - doortime > delay:
 			doortime = 0
 			ser.setDTR(Off)
 			print "Door released"
