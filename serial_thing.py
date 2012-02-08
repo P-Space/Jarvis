@@ -92,10 +92,18 @@ while True:
 		#print s[1:13]
 		found = 0;
 		for line in open("cards.txt"):
+			#Check if the line contains the number of the card
 			if s[1:13] in line:
 				found = 1
-				username=line.split("\t")[1].split("\n")[0]
+
+				#line format: card number \t username \n
+				username = line.split("\t")[1].split("\n")[0]
 				print "Card belongs to: " + username
+
+				#Check if the card has been cancelled
+				if re.match("#", line):
+					print "Card " + s[1:13] + "rejected for user " + username
+					break
 				try:
 					db=_mysql.connect(host="localhost", user=config.USER, passwd=config.PASSWD,db=config.DB)
 					db.query("""INSERT INTO events(type, name, card) VALUES('card', '"""+username+"""', '"""+s[1:13]+"""')""") 
@@ -120,5 +128,4 @@ while True:
 	controlDoor()
 
 	ser.flushInput()
-ser.close()	
-
+ser.close()
