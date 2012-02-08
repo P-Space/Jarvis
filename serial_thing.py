@@ -3,6 +3,7 @@ import string
 import time
 import _mysql
 import _mysql_exceptions
+import re
 
 import config
 
