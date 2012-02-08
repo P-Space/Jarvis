@@ -120,6 +120,7 @@ while True:
 					print "Shit! DB Error!"
 				except NameError:
 					print "No DB was initialized"
+				break
 				
 		if found == 0:
 			print "Unknown Card Number: " + s[1:13]
