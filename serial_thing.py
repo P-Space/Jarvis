@@ -36,7 +36,7 @@ def checkIfReleased():
 #since the door was last energized ("doortime"). 
 def controlDoor():
 	global doortime
-	delay = 0.5
+	delay = 2
 	if doortime != 0:
 		if time.time() - doortime > delay:
 			doortime = 0
