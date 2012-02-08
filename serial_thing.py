@@ -91,7 +91,6 @@ while True:
 		print "ID Card detected!"
 		#s = ser.read(15)
 		#print s[1:13]
-		found = 0;
 		for line in open("cards.txt"):
 			#Check if the line contains the number of the card
 			if s[1:13] in line:
@@ -104,7 +103,6 @@ while True:
 					break
 				
 				#If the card has been found in the file and is valid, open the door
-				found = 1
 				print "Card belongs to: " + username
 				print "Accepted!"
 				newtime = time.time()
@@ -121,9 +119,8 @@ while True:
 				except NameError:
 					print "No DB was initialized"
 				break
-				
-		if found == 0:
-			print "Unknown Card Number: " + s[1:13]
+			else
+				print "Unknown Card Number: " + s[1:13]
 	
 	elif done == 0:
 		print "Got undefined data: " + s + " Hex: " + ByteToHex(s)
