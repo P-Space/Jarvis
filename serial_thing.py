@@ -119,7 +119,7 @@ while True:
 				except NameError:
 					print "No DB was initialized"
 				break
-			else
+			else:
 				print "Unknown Card Number: " + s[1:13]
 	
 	elif done == 0:
