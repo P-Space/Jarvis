@@ -6,6 +6,7 @@ if (!$con) die('Could not connect: ' . mysql_error());
 $limit=10;
 $button = true;
 $style = true;
+$json=false;
 if(isset($_GET['limit']))
 	$limit=$_GET['limit'];
 
@@ -14,6 +15,8 @@ if(isset($_GET['nobutton']))
 
 if(isset($_GET['nostyle']))
 	$style=false;
+if(isset($_GET['json']))
+	$json=true;
 
 $sql="SELECT * FROM events ";
 if(!$button)
@@ -24,7 +27,9 @@ if (!$result)
 	die("Could not access database: ".mysql_error());
 else
 {
-	if($style)
+	$events = array();
+
+	if($style && !$json)
 	{
 		echo "<style type='text/css'><!-- @import url('style.css'); --></style>";
 		if(isset($_GET['small']))
@@ -35,33 +40,55 @@ else
 	}
 	while($row =mysql_fetch_row($result))
 	{
+		$event = array();
+		$event['type']="check-in";
 		if($row[2]=="remote")
 		{
-			if($style)
+			if($json)
+			{
+				$event['extra']="Remote button pressed!";
+				$event['name']="BBoD";
+			}
+			elseif($style)
 				$table_row =  "<td>Remote button pressed!</td>";
 			else
 				$table_row =  "Remote button pressed!<br />";
 		}
 		else
 		{
-			if($style)
+			if($json)
+			{
+				$event['extra']="Card was used by: ".$row[3];
+				$event['name']=$row[3];
+			}
+			elseif($style)
 				$table_row = "<td>Card was used by: ".$row[3]."</td>";
 			else
 				$table_row = $row[3]."<br />";
 			
 		}
-		if($style)
+		if($json)
+			$event['t']=strtotime($row[1]);
+		elseif($style)
 		{
 			echo "<tr id ='".$row[2]."'><td>".date("M j, G:i", strtotime($row[1]))."</td>";
 			echo $table_row;
 			echo "</tr>";
 		}
 		else
-			echo strtotime($row[1])." ".$table_row;			
+			echo strtotime($row[1])." ".$table_row;
+
+		$events[]  = $event;	
 	}
-	if($style)
+	if($json)
+	{
+		header('Content-type: application/json');
+		echo json_encode(array('events'=>$events));
+	}
+	elseif($style)
 		echo "</table>";
-}
+	
+ }
 
 mysql_close($con);
 ?>
