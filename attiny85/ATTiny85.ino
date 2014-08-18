@@ -9,8 +9,8 @@
 
 #include <Adafruit_NeoPixel.h>
 #include <SoftwareSerial.h>
-#include <EMIC2.h>
 #include <stdlib.h>
+#include "EMIC2.h"
 
 const uint8_t RING_DATA_PIN = 0;
 const uint8_t XBEE_RX_PIN = 1;

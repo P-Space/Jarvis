@@ -15,13 +15,12 @@
 #ifndef EMIC2_h
 #define EMIC2_h
 
-#include 
-#include 
-#include 
+#include <Arduino.h>
+#include <SoftwareSerial.h>
+#include <string.h>
 
 // #define VERBOSE true // Use this if you want verbose output of the operations executed
 
-#define SD_C 1
 
 // A class for interfacing the Emic 2 module
 class EMIC2
@@ -58,11 +57,6 @@ public:
 	void setRate(uint16_t rate);
 	void resetRate();
 	uint16_t getRate();
-	void setLanguage(uint8_t language);
-	uint8_t getLanguage();
-	void setParser(uint8_t parser);
-	uint8_t getParser();
-	void setDefaultSettings();
 	
 private:
 	SoftwareSerial *_emic2_io;
